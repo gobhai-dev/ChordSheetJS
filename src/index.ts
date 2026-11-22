@@ -89,6 +89,24 @@ export { default as Line } from './chord_sheet/line';
 export { default as Literal } from './chord_sheet/chord_pro/literal';
 export { default as Metadata } from './chord_sheet/metadata';
 export { default as Paragraph } from './chord_sheet/paragraph';
+export {
+  Grid, GridRow, parseGridLine, parseGridShape, parseGridBar, parseGridCell,
+} from './chord_sheet/grid';
+export type {
+  GridBar,
+  GridBarVariant,
+  GridCell,
+  GridChordCell,
+  GridEmptyCell,
+  GridMultiCell,
+  GridParseOptions,
+  GridRepeatCell,
+  GridRowKind,
+  GridShape,
+  GridSlashCell,
+  GridTextCell,
+  GridToken,
+} from './chord_sheet/grid';
 export { default as SoftLineBreak } from './chord_sheet/soft_line_break';
 export { default as Song } from './chord_sheet/song';
 export { default as SongMap } from './song_map/song_map';

@@ -1,3 +1,4 @@
+import Grid from './grid/grid';
 import { INDETERMINATE } from '../constants';
 import Item from './item';
 import Line from './line';
@@ -24,6 +25,15 @@ class Paragraph {
    * @type {Line[]}
    */
   lines: Line[] = [];
+
+  /**
+   * The section start tag (such as `{start_of_grid shape="2x2"}`) that opened this paragraph, when it has one.
+   * Unlike {@link lines}, this is also set when the start tag is not renderable (has no label) and so is
+   * not part of the paragraph lines.
+   * @member
+   * @type {Tag|null}
+   */
+  sectionStartTag: Tag | null = null;
 
   addLine(line): void {
     this.lines.push(line);
@@ -120,6 +130,15 @@ class Paragraph {
    */
   hasRenderableItems(): boolean {
     return this.lines.some((line) => line.hasRenderableItems());
+  }
+
+  /**
+   * Returns the derived grid cell model if this is a grid paragraph, null otherwise.
+   * @see {@link Grid.fromParagraph}
+   * @returns {Grid|null}
+   */
+  get grid(): Grid | null {
+    return Grid.fromParagraph(this);
   }
 
   isEmpty(): boolean {

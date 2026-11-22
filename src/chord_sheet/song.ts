@@ -186,8 +186,9 @@ class Song extends MetadataAccessors {
       if (line.isEmpty() || (line.isSectionEnd() && nextLine && !nextLine.isEmpty())) {
         currentParagraph = new Paragraph();
         paragraphs.push(currentParagraph);
-      } else if (line.hasRenderableItems()) {
-        currentParagraph.addLine(line);
+      } else {
+        if (line.isSectionStart()) currentParagraph.sectionStartTag ??= line._tag;
+        if (line.hasRenderableItems()) currentParagraph.addLine(line);
       }
     });
     return paragraphs;
