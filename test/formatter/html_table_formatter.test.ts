@@ -870,6 +870,198 @@ describe('HtmlTableFormatter', () => {
 
       .paragraph {
         margin-bottom: 1em;
+      }
+
+      .grid-scroll {
+        overflow-x: auto;
+      }
+
+      .grid-table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .grid-col-cell {
+        width: 2.2em;
+      }
+
+      .grid-col-margin,
+      .grid-col-comment {
+        width: 6ch;
+      }
+
+      .grid-col-end {
+        width: 1.4em;
+      }
+
+      .grid-cell,
+      .grid-end,
+      .grid-margin,
+      .grid-comment {
+        white-space: nowrap;
+        padding: 0;
+        text-align: left;
+      }
+
+      .grid-comment {
+        padding-left: 0.4em;
+      }
+
+      .grid-cell,
+      .grid-end {
+        height: 2.8em;
+        vertical-align: middle;
+      }
+
+      .grid-cell {
+        position: relative;
+      }
+
+      .grid-cell > *,
+      .grid-end > * {
+        vertical-align: middle;
+      }
+
+      .grid-margin,
+      .grid-comment {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.85em;
+        font-style: italic;
+      }
+
+      .grid-cell .chord,
+      .grid-repeat,
+      .grid-table .rhythm-symbol {
+        font-weight: 700;
+      }
+
+      .grid-cell .chord {
+        white-space: nowrap;
+      }
+
+      .grid-cell .chord-root {
+        font-size: 1.5em;
+      }
+
+      .grid-cell .chord-quality,
+      .grid-cell .chord-extensions {
+        font-size: 0.8em;
+        margin-left: 0.04em;
+      }
+
+      .grid-cell .chord-accidental {
+        display: inline-block;
+        width: 0;
+        font-size: 0.62em;
+        vertical-align: 0.62em;
+        margin-left: 0.03em;
+      }
+
+      .grid-cell .chord-root:last-child > .chord-accidental {
+        width: auto;
+      }
+
+      .grid-cell .chord-alterations {
+        font-size: 0.9em;
+        margin-left: 0.12em;
+      }
+
+      .grid-cell .chord-alterations-stacked {
+        display: inline-grid;
+        font-size: 0.8em;
+        grid-template-rows: auto auto;
+        grid-auto-flow: column;
+        column-gap: 0.15em;
+        line-height: 1;
+        vertical-align: middle;
+      }
+
+      .grid-cell .chord-bass {
+        font-size: 0.72em;
+        position: relative;
+        top: 0.3em;
+        margin-left: 0.05em;
+      }
+
+      .grid-multi .chord {
+        font-size: 0.78em;
+      }
+
+      .grid-multi .chord + .chord {
+        margin-left: 0.35em;
+      }
+
+      .grid-repeat,
+      .grid-table .rhythm-symbol {
+        font-size: 1.3em;
+        opacity: 0.75;
+      }
+
+      .grid-table .barline {
+        display: inline-block;
+        box-sizing: content-box;
+        height: 2.2em;
+        width: 0;
+        margin-right: 0.35em;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: -99em;
+        border-left: 0.1em solid currentColor;
+      }
+
+      .grid-table .barline-double {
+        width: 0.16em;
+        border-right: 0.1em solid currentColor;
+      }
+
+      .grid-table .barline-end {
+        width: 0.16em;
+        border-right: 0.3em solid currentColor;
+      }
+
+      .grid-table .barline-repeat-start {
+        width: 0.72em;
+        border-left-width: 0.3em;
+        background: linear-gradient(currentColor, currentColor) 0.16em 0 / 0.1em 100% no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 64% / 0.26em 0.26em no-repeat;
+      }
+
+      .grid-table .barline-repeat-end {
+        width: 0.72em;
+        border-left: 0;
+        border-right: 0.3em solid currentColor;
+        background: linear-gradient(currentColor, currentColor) calc(100% - 0.16em) 0 / 0.1em 100% no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 64% / 0.26em 0.26em no-repeat;
+      }
+
+      .grid-table .barline-repeat-end-start {
+        width: 1.3em;
+        border-left: 0;
+        background: linear-gradient(currentColor, currentColor) 50% 0 / 0.3em 100% no-repeat,
+          linear-gradient(currentColor, currentColor) calc(50% - 0.31em) 0 / 0.1em 100% no-repeat,
+          linear-gradient(currentColor, currentColor) calc(50% + 0.31em) 0 / 0.1em 100% no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 64% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 64% / 0.26em 0.26em no-repeat;
+      }
+
+      .grid-volta {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 2.6em;
+        padding-left: 0.35em;
+        border-top: 0.12em solid currentColor;
+        border-left: 0.12em solid currentColor;
+        font-size: 0.7em;
+        font-weight: 700;
+        line-height: 1.3;
       }`;
 
     const actualCss = new HtmlTableFormatter().cssString();
@@ -909,6 +1101,198 @@ describe('HtmlTableFormatter', () => {
 
       .someScope .paragraph {
         margin-bottom: 1em;
+      }
+
+      .someScope .grid-scroll {
+        overflow-x: auto;
+      }
+
+      .someScope .grid-table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .someScope .grid-col-cell {
+        width: 2.2em;
+      }
+
+      .someScope .grid-col-margin,
+      .someScope .grid-col-comment {
+        width: 6ch;
+      }
+
+      .someScope .grid-col-end {
+        width: 1.4em;
+      }
+
+      .someScope .grid-cell,
+      .someScope .grid-end,
+      .someScope .grid-margin,
+      .someScope .grid-comment {
+        white-space: nowrap;
+        padding: 0;
+        text-align: left;
+      }
+
+      .someScope .grid-comment {
+        padding-left: 0.4em;
+      }
+
+      .someScope .grid-cell,
+      .someScope .grid-end {
+        height: 2.8em;
+        vertical-align: middle;
+      }
+
+      .someScope .grid-cell {
+        position: relative;
+      }
+
+      .someScope .grid-cell > *,
+      .someScope .grid-end > * {
+        vertical-align: middle;
+      }
+
+      .someScope .grid-margin,
+      .someScope .grid-comment {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.85em;
+        font-style: italic;
+      }
+
+      .someScope .grid-cell .chord,
+      .someScope .grid-repeat,
+      .someScope .grid-table .rhythm-symbol {
+        font-weight: 700;
+      }
+
+      .someScope .grid-cell .chord {
+        white-space: nowrap;
+      }
+
+      .someScope .grid-cell .chord-root {
+        font-size: 1.5em;
+      }
+
+      .someScope .grid-cell .chord-quality,
+      .someScope .grid-cell .chord-extensions {
+        font-size: 0.8em;
+        margin-left: 0.04em;
+      }
+
+      .someScope .grid-cell .chord-accidental {
+        display: inline-block;
+        width: 0;
+        font-size: 0.62em;
+        vertical-align: 0.62em;
+        margin-left: 0.03em;
+      }
+
+      .someScope .grid-cell .chord-root:last-child > .chord-accidental {
+        width: auto;
+      }
+
+      .someScope .grid-cell .chord-alterations {
+        font-size: 0.9em;
+        margin-left: 0.12em;
+      }
+
+      .someScope .grid-cell .chord-alterations-stacked {
+        display: inline-grid;
+        font-size: 0.8em;
+        grid-template-rows: auto auto;
+        grid-auto-flow: column;
+        column-gap: 0.15em;
+        line-height: 1;
+        vertical-align: middle;
+      }
+
+      .someScope .grid-cell .chord-bass {
+        font-size: 0.72em;
+        position: relative;
+        top: 0.3em;
+        margin-left: 0.05em;
+      }
+
+      .someScope .grid-multi .chord {
+        font-size: 0.78em;
+      }
+
+      .someScope .grid-multi .chord + .chord {
+        margin-left: 0.35em;
+      }
+
+      .someScope .grid-repeat,
+      .someScope .grid-table .rhythm-symbol {
+        font-size: 1.3em;
+        opacity: 0.75;
+      }
+
+      .someScope .grid-table .barline {
+        display: inline-block;
+        box-sizing: content-box;
+        height: 2.2em;
+        width: 0;
+        margin-right: 0.35em;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: -99em;
+        border-left: 0.1em solid currentColor;
+      }
+
+      .someScope .grid-table .barline-double {
+        width: 0.16em;
+        border-right: 0.1em solid currentColor;
+      }
+
+      .someScope .grid-table .barline-end {
+        width: 0.16em;
+        border-right: 0.3em solid currentColor;
+      }
+
+      .someScope .grid-table .barline-repeat-start {
+        width: 0.72em;
+        border-left-width: 0.3em;
+        background: linear-gradient(currentColor, currentColor) 0.16em 0 / 0.1em 100% no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 64% / 0.26em 0.26em no-repeat;
+      }
+
+      .someScope .grid-table .barline-repeat-end {
+        width: 0.72em;
+        border-left: 0;
+        border-right: 0.3em solid currentColor;
+        background: linear-gradient(currentColor, currentColor) calc(100% - 0.16em) 0 / 0.1em 100% no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 64% / 0.26em 0.26em no-repeat;
+      }
+
+      .someScope .grid-table .barline-repeat-end-start {
+        width: 1.3em;
+        border-left: 0;
+        background: linear-gradient(currentColor, currentColor) 50% 0 / 0.3em 100% no-repeat,
+          linear-gradient(currentColor, currentColor) calc(50% - 0.31em) 0 / 0.1em 100% no-repeat,
+          linear-gradient(currentColor, currentColor) calc(50% + 0.31em) 0 / 0.1em 100% no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 0 64% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 36% / 0.26em 0.26em no-repeat,
+          radial-gradient(circle closest-side, currentColor 92%, transparent) 100% 64% / 0.26em 0.26em no-repeat;
+      }
+
+      .someScope .grid-volta {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 2.6em;
+        padding-left: 0.35em;
+        border-top: 0.12em solid currentColor;
+        border-left: 0.12em solid currentColor;
+        font-size: 0.7em;
+        font-weight: 700;
+        line-height: 1.3;
       }`;
 
     const actualCss = new HtmlTableFormatter().cssString('.someScope');

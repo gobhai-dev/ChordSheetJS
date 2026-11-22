@@ -1,4 +1,5 @@
 import { HtmlTemplateCssClasses } from './configuration';
+import gridCss from './grid_css';
 import template from './templates/html_table_formatter';
 import HtmlFormatter, { CSS, Template } from './html_formatter';
 
@@ -39,6 +40,8 @@ function defaultCss(cssClasses: HtmlTemplateCssClasses): CSS {
     [`.${paragraph}`]: {
       marginBottom: '1em',
     },
+
+    ...gridCss(cssClasses),
   };
 }
 

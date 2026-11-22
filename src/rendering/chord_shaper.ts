@@ -39,7 +39,7 @@ export interface ChordRunOptions {
 const warnedMissingGlyphs = new Set<string>();
 const CHORD_SYMBOL_CODE_POINTS = new Set([0x00B0, 0x00F8, 0x0394, 0x2206, 0x2300, 0x25B3, 0x266D, 0x266E, 0x266F]);
 
-function displaySuffixPart(text: string, useUnicodeModifier: boolean): string {
+export function displaySuffixPart(text: string, useUnicodeModifier: boolean): string {
   if (!useUnicodeModifier) return text;
   return text.replace(/#(?=\d)/g, '\u266f').replace(/b(?=\d)/g, '\u266d');
 }
@@ -88,26 +88,47 @@ function createRun(
   };
 }
 
-function buildLogicalRuns(
-  chord: Chord,
-  useUnicodeModifier: boolean,
-  chordFont: FontConfiguration,
-  rendering: ChordRenderingConfig,
-): ChordTextRun[] {
+export interface ChordTextPartValue {
+  part: ChordTextPart;
+  text: string;
+}
+
+/**
+ * Splits a parsed chord into its non-empty text parts (optional markers, root, quality, extensions, bass).
+ * This is the single source of truth for how a chord is divided, shared by the measured renderer and the
+ * grid HTML renderer. It carries no font information.
+ */
+export function chordTextParts(chord: Chord, useUnicodeModifier: boolean): ChordTextPartValue[] {
   const suffix = chord.suffix || '';
   const showMinor = suffix[0] !== 'm';
   const root = chord.root?.toString({ showMinor, useUnicodeModifier }) || '';
   const quality = displaySuffixPart(chord.quality || '', useUnicodeModifier);
   const extensions = displaySuffixPart(chord.extensions || '', useUnicodeModifier);
   const bass = chord.bass ? `/${chord.bass.toString({ useUnicodeModifier })}` : '';
-  return [
-    createRun('marker', chord.optional ? '(' : '', chordFont),
-    createRun('root', root, chordFont),
-    createRun('quality', quality, chordFont, rendering.quality),
-    createRun('extensions', extensions, chordFont, rendering.extensions),
-    createRun('bass', bass, chordFont),
-    createRun('marker', chord.optional ? ')' : '', chordFont),
-  ].filter(({ text }) => !!text);
+  const parts: ChordTextPartValue[] = [
+    { part: 'marker', text: chord.optional ? '(' : '' },
+    { part: 'root', text: root },
+    { part: 'quality', text: quality },
+    { part: 'extensions', text: extensions },
+    { part: 'bass', text: bass },
+    { part: 'marker', text: chord.optional ? ')' : '' },
+  ];
+  return parts.filter(({ text }) => !!text);
+}
+
+function buildLogicalRuns(
+  chord: Chord,
+  useUnicodeModifier: boolean,
+  chordFont: FontConfiguration,
+  rendering: ChordRenderingConfig,
+): ChordTextRun[] {
+  const styles: Partial<Record<ChordTextPart, ChordPartStyle | undefined>> = {
+    quality: rendering.quality,
+    extensions: rendering.extensions,
+  };
+  return chordTextParts(chord, useUnicodeModifier).map(({ part, text }) => (
+    createRun(part, text, chordFont, styles[part])
+  ));
 }
 
 function fallbackStyle(font: FontConfiguration): 'normal' | 'bold' | 'italic' | 'bolditalic' {
