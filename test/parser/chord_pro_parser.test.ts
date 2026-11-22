@@ -9,6 +9,7 @@ import {
   ChordLyricsPair,
   ChordProParser,
   LILYPOND,
+  Literal,
   NONE,
   SVG,
   TAB,
@@ -713,6 +714,47 @@ Let it [Am]be
     expect(lines[2].items[0]).toBeLiteral('Tab line 2');
 
     expect(secondParagraph.lines[0].items[0]).toBeTag('comment', 'Verse');
+  });
+
+  describe('literal section start tags', () => {
+    const parseSection = (startTag: string, endTag: string) => {
+      const song = new ChordProParser().parse(`${startTag}\n| G . | C . |\n${endTag}`);
+      return song.lines.filter((line) => line.items[0] instanceof Tag || line.items[0] instanceof Literal);
+    };
+
+    it.each([
+      ['{start_of_grid shape="2x2"}', '{end_of_grid}', 'start_of_grid', { shape: '2x2' }],
+      ['{start_of_grid label="Intro"}', '{end_of_grid}', 'start_of_grid', { label: 'Intro' }],
+      ['{start_of_tab label="Solo"}', '{end_of_tab}', 'start_of_tab', { label: 'Solo' }],
+      ['{sog shape="2x2" label="Intro"}', '{eog}', 'start_of_grid', { shape: '2x2', label: 'Intro' }],
+      ['{start_of_grid: shape="2x2"}', '{end_of_grid}', 'start_of_grid', { shape: '2x2' }],
+    ])('parses %s as a literal section', (startTag, endTag, name, attributes) => {
+      const lines = parseSection(startTag, endTag);
+      const tagLine = lines[0];
+
+      expect((tagLine.items[0] as Tag).name).toEqual(name);
+      expect((tagLine.items[0] as Tag).attributes).toEqual(attributes);
+      expect(lines[1].items[0]).toBeLiteral('| G . | C . |');
+    });
+
+    it('parses a space separated value as a literal section', () => {
+      const lines = parseSection('{start_of_grid 2x2}', '{end_of_grid}');
+
+      expect(lines[0].items[0]).toBeTag('start_of_grid', '2x2');
+      expect(lines[1].items[0]).toBeLiteral('| G . | C . |');
+    });
+
+    it.each(['grid', 'tab', 'abc', 'ly', 'svg', 'textblock'])('accepts attributes on start_of_%s', (type) => {
+      const lines = parseSection(`{start_of_${type} label="X"}`, `{end_of_${type}}`);
+
+      expect(lines[0].items[0]).toBeTag(`start_of_${type}`, '');
+      expect(lines[1].items[0]).toBeLiteral('| G . | C . |');
+    });
+
+    it('still parses the colon form and the bare form', () => {
+      expect(parseSection('{start_of_grid: 2x2}', '{end_of_grid}')[1].items[0]).toBeLiteral('| G . | C . |');
+      expect(parseSection('{start_of_grid}', '{end_of_grid}')[1].items[0]).toBeLiteral('| G . | C . |');
+    });
   });
 
   it('parses ABC sections', () => {

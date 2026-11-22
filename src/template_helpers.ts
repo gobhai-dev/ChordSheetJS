@@ -41,7 +41,7 @@ export function isRhythmSymbol(item: Item): boolean {
   return item instanceof ChordLyricsPair && item.isRhythmSymbol;
 }
 
-function tokenClasses(baseClass: string, variant: string | null): string {
+export function tokenClasses(baseClass: string, variant: string | null): string {
   return variant ? `${baseClass} ${baseClass}-${variant}` : baseClass;
 }
 

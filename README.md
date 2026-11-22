@@ -135,6 +135,52 @@ const formatter = new ChordSheetJS.HtmlDivFormatter();
 const disp = formatter.format(song);
 ```
 
+##### Grid sections
+
+By default `{start_of_grid}` sections are output as literal text. With `renderGrids: true` both HTML formatters render
+them as a fixed-layout table with one aligned cell per beat (the `delegates.grid` delegate is not called then):
+
+```javascript
+const song = new ChordSheetJS.ChordProParser().parse(`
+{start_of_grid}
+Intro | Am . . . | C . % :|1 x2
+{end_of_grid}
+`);
+
+new ChordSheetJS.HtmlDivFormatter({ renderGrids: true }).format(song);
+// <div class="grid-scroll"><table class="grid-table"><colgroup>...</colgroup><tr class="grid-row">
+//   <td class="grid-margin" colspan="1">Intro</td>
+//   <td class="grid-cell"><span class="barline barline-single">|</span>
+//     <span class="chord"><span class="chord-root">A</span><span class="chord-quality">m</span></span></td>
+//   ...
+// </tr></table></div>
+```
+
+Chords that parse are split into `chord-root`, `chord-quality`, `chord-extensions` and `chord-bass` spans (plus
+`chord-marker` for the parentheses of an optional chord); other text, such as `N.C.` or `dn`, stays a plain `chord`
+span, and chord names are never normalised. A root accidental is nested in a `chord-accidental` span (`Bb` becomes `B` plus the accidental), and a trailing run of alterations in the extensions (`b9`, `#11`, `sus4`, `add9`,
+`alt`) is nested in a `chord-alterations` span with one `chord-alteration` span each; with two or more, it also gets
+`chord-alterations-stacked`. With `useUnicodeModifiers: true` accidentals are shown as `♯`/`♭`.
+
+The table is styled by the formatters' `cssString()` as a chart: drawn bar lines, repeat signs and volta brackets, and
+chords with a large root and a smaller quality on the baseline. Root accidentals are raised above the quality, and two
+or more alterations stack in two rows. The CSS uses only `currentColor` and no fonts, so colours and
+typeface come from the page. It uses no inline styles, and its class names can be changed with `cssClasses`
+(`gridScroll`, `gridTable`, `gridRow`, `gridCell`, `chordRoot`, ...). Columns have minimum widths (cells `2.2em`, margin
+and comment `6ch` per shape margin cell) and wider grids scroll horizontally inside `.grid-scroll`. Longer
+margin/comment text is clipped: widen with CSS (e.g. `.grid-col-margin { width: 10ch; }`) or a shape such as
+`2+4x4+1`. The same data is available as a cell model on the paragraph:
+
+```javascript
+const grid = song.paragraphs.find((paragraph) => paragraph.type === 'grid').grid;
+
+grid.shape; // { leftMargin: 1, cells: 7, rightMargin: 1, measures: null, beats: null }
+grid.rows[0].margin; // 'Intro'
+grid.rows[0].comment; // 'x2'
+grid.rows[0].cells; // [{ type: 'chord', chord: 'Am' }, { type: 'empty' }, ...]
+grid.rows[0].bars; // [{ type: 'bar', symbol: '|', variant: 'single', volta: null, ... }, ...]
+```
+
 #### Chord pro format
 
 ```javascript

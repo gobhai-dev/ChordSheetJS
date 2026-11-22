@@ -1,8 +1,10 @@
 import { HtmlTemplateCssClasses } from './configuration';
+import gridCss from './grid_css';
 import template from './templates/html_div_formatter';
 
 import HtmlFormatter, { CSS, Template } from './html_formatter';
 
+// eslint-disable-next-line max-lines-per-function
 function defaultCss(cssClasses: HtmlTemplateCssClasses): CSS {
   const {
     chord,
@@ -31,6 +33,8 @@ function defaultCss(cssClasses: HtmlTemplateCssClasses): CSS {
     [`.${lyrics}:after`]: {
       content: '\'\\200b\'',
     },
+
+    ...gridCss(cssClasses),
   };
 }
 

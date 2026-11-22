@@ -22,6 +22,8 @@ import {
   when,
 } from '../../template_helpers';
 
+import { renderGridParagraph, rendersAsGrid, sectionLabel } from './grid';
+
 export default (
   {
     configuration,
@@ -40,6 +42,7 @@ export default (
   }: HtmlTemplateArgs,
 ): string => {
   const pango = configuration.pangoRenderer || defaultPangoRenderer;
+  const labelOf = (paragraph) => sectionLabel(paragraph, configuration.renderGrids);
 
   return stripHTML(`
   ${ when(title, () => `<h1 class="${ c.title }">${ title }</h1>`) }
@@ -49,15 +52,19 @@ export default (
     ${ each(bodyParagraphs, (paragraph) => `
       <div class="${ paragraphClasses(paragraph, c) }">
         ${ when(paragraph.isLiteral(), () => `
-          ${ when(isPresent(paragraph.label), () => `
+          ${ when(isPresent(labelOf(paragraph)), () => `
             <div class="${ c.row }">
-              <h3 class="${ c.label }">${ expandMeta(paragraph.label, metadata, configuration) }</h3>
+              <h3 class="${ c.label }">${ expandMeta(labelOf(paragraph), metadata, configuration) }</h3>
             </div>
           `) }
 
-          <div class="${ c.row }">
-            <div class="${ c.literal }">${ newlinesToBreaks(renderSection(paragraph, configuration)) }</div>
-          </div>
+          ${ when(rendersAsGrid(paragraph, configuration.renderGrids), () => (
+            renderGridParagraph(paragraph, c, configuration.useUnicodeModifiers)
+          )).else(() => `
+            <div class="${ c.row }">
+              <div class="${ c.literal }">${ newlinesToBreaks(renderSection(paragraph, configuration)) }</div>
+            </div>
+          `) }
         `).else(() => `
           ${ each(paragraph.lines, (line) => `
             ${ when(renderBlankLines || lineHasContents(line), () => `

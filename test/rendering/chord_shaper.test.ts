@@ -1,7 +1,9 @@
+import Chord from '../../src/chord';
 import { FontConfiguration } from '../../src/formatter/configuration';
 import {
   ChordRunOptions,
   buildChordRuns,
+  chordTextParts,
   getChordRunsMetrics,
 } from '../../src/rendering/chord_shaper';
 
@@ -236,5 +238,35 @@ describe('chord shaper', () => {
     expect(metrics).toEqual({
       width: 60, ascentHeight: 20, baselineHeight: 20, boxHeight: 40,
     });
+  });
+});
+
+describe('chordTextParts', () => {
+  const parts = (chord: string, useUnicodeModifier = false) => (
+    chordTextParts(Chord.parse(chord)!, useUnicodeModifier)
+  );
+
+  it('splits a chord into semantic parts', () => {
+    expect(parts('Am7/G')).toEqual([
+      { part: 'root', text: 'A' },
+      { part: 'quality', text: 'm' },
+      { part: 'extensions', text: '7' },
+      { part: 'bass', text: '/G' },
+    ]);
+  });
+
+  it('wraps an optional chord in markers and omits empty parts', () => {
+    expect(parts('(C)')).toEqual([
+      { part: 'marker', text: '(' },
+      { part: 'root', text: 'C' },
+      { part: 'marker', text: ')' },
+    ]);
+  });
+
+  it('uses Unicode accidentals when asked to', () => {
+    expect(parts('Bb7#9', true)).toEqual([
+      { part: 'root', text: 'B\u266d' },
+      { part: 'extensions', text: '7\u266f9' },
+    ]);
   });
 });

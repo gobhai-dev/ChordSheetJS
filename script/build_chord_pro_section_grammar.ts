@@ -40,8 +40,8 @@ ${sectionName}Section
     }
 
 ${sectionName}StartTag
-  = "{" _ tagName:(${startTag}) selector:TagSelector? _ tagColonWithValue:TagColonWithValue? _ "}" {
-      return helpers.buildTag(tagName, tagColonWithValue, selector, location());
+  = "{" _ tagName:(${startTag}) selector:TagSelector? tagValue:(TagColonWithValue / TagSpaceWithValue)? _ "}" {
+      return helpers.buildTag(tagName, tagValue, selector, location());
     }
 
 ${sectionName}EndTag
